@@ -46,7 +46,20 @@ ipcRenderer.on(ON_NOTIFICATION_RECEIVED, (_, notification) => // display notific
 // Start service
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId);
 ```
-### Reseting the Push Receiver
+
+## Resetting the Push Receiver
+There are cases where you may need to reset the push receiver to a state where it retrieves a new notification token from FCM. For instance, if your app is designed to support a sign-in screen and you only want push notifications for the person who signs in, you will need to have the push receiver delete the notification token when a different person signs in, otherwise the new sign-in may receive notifications that are only private to the person who signed in previously.
+- In renderer process :
+```javascript
+import { ipcRenderer } from 'electron';
+import {
+  DESTROY_NOTIFICATION_SERVICE
+} from 'electron-push-receiver/src/constants';
+// You can invoke it on user logout
+ipcRenderer.send(DESTROY_NOTIFICATION_SERVICE);
+```
+
+### Reseting the Push Receiver (method no. 2)
 There are cases where you may need to reset the push receiver to a state where it retrieves a new notification token from FCM. For instance,if your app is designed to support a sign in screen and you only want push notifications for the person who signs in, you will need to have the push receiver delete the notification token when a different person signs in, otherwise it is possible that the new sign in receives notifications that are only private to the person who signed in previously.
 
 One solution is to simply delete the cache and restart the app using Electron's API. But this is not always desirable. If you want to avoid clearing your app's cache and don't want to restart the app, you can call the reset method on the push receiver. This will have to be called from the renderer process back into the main prcoess. Here is an example of how to setup a callback in the main process:
