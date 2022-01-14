@@ -37,7 +37,7 @@ function setup(webContents) {
     // Retrieve saved senderId
     const savedSenderId = config.get('senderId');
     if (started) {
-      webContents.send(NOTIFICATION_SERVICE_STARTED, (credentials.fcm || {}).token);
+      webContents.send(NOTIFICATION_SERVICE_STARTED, ((credentials && credentials.fcm) || {}).token);
       return;
     }
     started = true;
@@ -94,6 +94,9 @@ function onNotification(webContents) {
     // Update persistentId
     config.set('persistentIds', [...persistentIds, persistentId]);
     // Notify the renderer process that a new notification has been received
-    webContents.send(NOTIFICATION_RECEIVED, notification);
+    // And check if window is not destroyed for darwin Apps
+    if(!webContents.isDestroyed()){
+      webContents.send(NOTIFICATION_RECEIVED, notification);
+    }
   };
 }
