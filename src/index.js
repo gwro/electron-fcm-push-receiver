@@ -10,7 +10,7 @@ const {
   TOKEN_UPDATED,
 } = require('./constants');
 
-const config = new Store();
+let config;
 
 module.exports = {
   START_NOTIFICATION_SERVICE,
@@ -29,7 +29,14 @@ let started = false;
 //  used as a ref to client instance
 let client;
 // To be called from the main process
-function setup(webContents) {
+function setup(webContents, encryptionKey) {
+  if (!config) {
+    config = new Store({
+      name: 'fcm',
+      encryptionKey,
+    });
+  }
+
   // Will be called by the renderer process
   ipcMain.on(START_NOTIFICATION_SERVICE, async (_, senderId) => {
     // Retrieve saved credentials
