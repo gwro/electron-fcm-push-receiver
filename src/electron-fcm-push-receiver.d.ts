@@ -5,7 +5,7 @@ interface ElectronPushReceiver {
     NOTIFICATION_SERVICE_ERROR: string;
     NOTIFICATION_RECEIVED: string;
     TOKEN_UPDATED: string;
-    setup: (webContents: Electron.WebContents, encrypt: string) => void;
+    setup: (webContents: Electron.WebContents, encryptionKey?: string) => void;
     reset: () => void;
 }
 

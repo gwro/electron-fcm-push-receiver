@@ -33,7 +33,7 @@ function setup(webContents, encryptionKey) {
   if (!config) {
     config = new Store({
       name: 'fcm',
-      encryptionKey,
+      encryptionKey: encryptionKey || undefined,
     });
   }
 
